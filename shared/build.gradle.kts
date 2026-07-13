@@ -7,12 +7,22 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
 
+    // Room (локальная БД, KMP)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+
     // Code Quality
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
 }
 
 kotlin {
+    // Room KMP использует `expect object` для конструктора БД — гасим Beta-предупреждение
+    // KT-61573 про expect/actual-классы (рекомендация Room).
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
@@ -23,7 +33,7 @@ kotlin {
         }
     }
 
-    androidLibrary {
+    android {
         namespace = "space.users.four.serphantom.shared"
         compileSdk =
             libs.versions.android.compileSdk
@@ -94,6 +104,10 @@ kotlin {
             implementation(libs.ktorscope.ktor)
             implementation(libs.ktorscope.compose)
 
+            // Room (локальная БД, KMP) + bundled SQLite driver
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
+
             // Kotlinx
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
@@ -106,6 +120,11 @@ kotlin {
             implementation(libs.kotlin.test)
         }
     }
+}
+
+// Room: каталог для экспорта схем БД (нужен для миграций и тестов схемы).
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 // region Code Quality
@@ -132,6 +151,11 @@ detekt {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+
+    // Room compiler (KSP) — по одному на каждый таргет KMP.
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
 
     // Code Quality — custom detekt rules
     detektPlugins(projects.detektCustomRules)

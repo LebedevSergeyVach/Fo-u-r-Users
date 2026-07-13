@@ -37,6 +37,13 @@ ktor = "3.5.1"
 # KtorScope (просмотр сетевых запросов на устройстве)
 ktorscope = "1.2.0"
 
+# Room (локальная БД, KMP) + KSP
+# ВНИМАНИЕ: KSP жёстко привязан к версии Kotlin. Latest KSP — 2.3.10 (под Kotlin 2.3.10),
+# релиза под Kotlin 2.4.0 пока нет. Пробуем 2.3.10 на 2.4.0 (экспериментально).
+room = "2.8.4"
+sqlite = "2.6.2"
+ksp = "2.3.10"
+
 # Kotlinx
 kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.11.0"
@@ -102,6 +109,11 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktorscope-ktor = { module = "io.github.mahmoud947:ktorscope-ktor", version.ref = "ktorscope" }
 ktorscope-compose = { module = "io.github.mahmoud947:ktorscope-compose", version.ref = "ktorscope" }
 
+# Room (локальная БД, KMP) + bundled SQLite driver
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
 # Kotlinx
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -130,6 +142,10 @@ androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library",
 # Kotlin
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+# Room + KSP
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
 
 # Compose
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
