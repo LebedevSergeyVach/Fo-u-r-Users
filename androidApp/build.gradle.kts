@@ -29,6 +29,9 @@ dependencies {
     // Compose Tooling
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
+
+    // Code Quality — custom detekt rules
+    detektPlugins(projects.detektCustomRules)
 }
 
 android {
@@ -70,6 +73,7 @@ ktlint {
 detekt {
     buildUponDefaultConfig = true
     parallel = true
+    config.setFrom(rootProject.files("detekt/detekt.yml"))
 }
 
 // endregion

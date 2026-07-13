@@ -106,10 +106,14 @@ ktlint {
 detekt {
     buildUponDefaultConfig = true
     parallel = true
+    config.setFrom(rootProject.files("detekt/detekt.yml"))
 }
 
 // endregion
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+
+    // Code Quality — custom detekt rules
+    detektPlugins(projects.detektCustomRules)
 }
