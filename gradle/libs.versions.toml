@@ -34,6 +34,9 @@ koin-bom = "4.2.1"
 # Ktor (Networking)
 ktor = "3.5.1"
 
+# KtorScope (просмотр сетевых запросов на устройстве)
+ktorscope = "1.2.0"
+
 # Kotlinx
 kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.11.0"
@@ -94,6 +97,10 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+
+# KtorScope (сетевой инспектор)
+ktorscope-ktor = { module = "io.github.mahmoud947:ktorscope-ktor", version.ref = "ktorscope" }
+ktorscope-compose = { module = "io.github.mahmoud947:ktorscope-compose", version.ref = "ktorscope" }
 
 # Kotlinx
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }

@@ -1,5 +1,6 @@
 package space.users.four.serphantom.core.network
 
+import io.github.mahmoud.ktorscope.ktor.KtorScope
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
@@ -71,6 +72,19 @@ object HttpClientFactory {
                         }
                     }
                 level = LogLevel.BODY
+            }
+
+            // KtorScope — захват запросов/ответов для просмотра на устройстве
+            // (экран открывается через presentation/debug/NetworkInspectorScreen).
+            // Для релиза стоит гейтить enabled по debug-флагу.
+            install(KtorScope) {
+                enabled = true
+                captureBodies = true
+                prettyPrint = true
+                // WebSockets не используются — кадры не захватываем.
+                captureWebSocketFrames = false
+                // redactHeaders по умолчанию скрывает Authorization, Cookie,
+                // Set-Cookie, X-Api-Key, Api-Key, access_token, refresh_token.
             }
 
             defaultRequest {

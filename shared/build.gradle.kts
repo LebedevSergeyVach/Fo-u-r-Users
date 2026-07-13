@@ -90,6 +90,10 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
 
+            // KtorScope — просмотр сетевых запросов на устройстве (Ktor-плагин + Compose UI)
+            implementation(libs.ktorscope.ktor)
+            implementation(libs.ktorscope.compose)
+
             // Kotlinx
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)

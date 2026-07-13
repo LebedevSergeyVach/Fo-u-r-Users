@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import fourusers.shared.generated.resources.Res
 import fourusers.shared.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
+import space.users.four.serphantom.presentation.debug.NetworkInspectorScreen
 
 /**
  * Корневой composable приложения.
@@ -33,6 +34,13 @@ import org.jetbrains.compose.resources.painterResource
 fun App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
+        var showInspector by remember { mutableStateOf(false) }
+
+        if (showInspector) {
+            NetworkInspectorScreen(onClose = { showInspector = false })
+            return@MaterialTheme
+        }
+
         Column(
             modifier =
                 Modifier
@@ -41,6 +49,9 @@ fun App() {
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Button(onClick = { showInspector = true }) {
+                Text("Network Inspector")
+            }
             Button(onClick = { showContent = !showContent }) {
                 Text("Click me!")
             }
