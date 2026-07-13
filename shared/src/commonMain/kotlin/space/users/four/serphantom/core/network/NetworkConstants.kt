@@ -2,6 +2,7 @@ package space.users.four.serphantom.core.network
 
 /** Базовые сетевые константы: адрес API, таймауты и параметры повторов. */
 object NetworkConstants {
+
     /** Базовый URL API. Все относительные пути [ApiRoutes] резолвятся от него. */
     const val BASE_URL: String = "https://api.fourusers.space/"
 

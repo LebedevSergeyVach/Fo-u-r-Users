@@ -7,6 +7,7 @@ package space.users.four.serphantom.core.network
  * поэтому задаются без ведущего слэша и без хоста.
  */
 object ApiRoutes {
+
     /** Коллекция пользователей: `GET /users`, `POST /users`. */
     const val USERS: String = "users"
 }

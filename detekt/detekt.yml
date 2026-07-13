@@ -25,7 +25,7 @@ build:
 
 config:
   validation: true
-  warningsAsErrors: false
+  warningsAsErrors: true
   checkExhaustiveness: false
 
 processors:
@@ -65,12 +65,20 @@ comments:
     active: false
   OutdatedDocumentation:
     active: false
+  # KDoc обязателен (см. docs/KDOC.md). Тесты исключены — документировать их не требуем.
   UndocumentedPublicClass:
-    active: false        # Планируем отдельно — обсудим KDoc правила
+    active: true
+    excludes: ['**/*Test.kt', '**/*Tests.kt', '**/test/**', '**/*Test/**']
+    searchInNestedClass: true
+    searchInInnerClass: true
+    searchInInnerObject: true
+    searchInInnerInterface: true
   UndocumentedPublicFunction:
-    active: false
+    active: true
+    excludes: ['**/*Test.kt', '**/*Tests.kt', '**/test/**', '**/*Test/**']
   UndocumentedPublicProperty:
-    active: false
+    active: true
+    excludes: ['**/*Test.kt', '**/*Tests.kt', '**/test/**', '**/*Test/**']
 
 complexity:
   active: true
@@ -86,16 +94,15 @@ complexity:
     active: true
     threshold: 15
     ignoreSingleWhenExpression: false
-    includeSimpleArrowFunctions: true
   LargeClass:
     active: true
     threshold: 600
   LongMethod:
     active: true
-    threshold: 60
+    threshold: 45
   LongParameterList:
     active: true
-    functionThreshold: 6
+    functionThreshold: 4
     constructorThreshold: 7
     ignoreDefaultParameters: false
     ignoreDataClasses: true
@@ -109,17 +116,11 @@ complexity:
     # Срабатывает, когда число позиционных аргументов > порога.
     # ============================================================
     active: true
-    allowedArguments: 2        # До 2 аргументов включительно — можно без имён
-    ignoreMethods:             # Исключения: функции, где named args неприменимы
-      - "arrayOf"
-      - "listOf"
-      - "setOf"
-      - "mapOf"
-      - "mutableListOf"
-      - "mutableSetOf"
-      - "mutableMapOf"
-      - "println"
-      - "print"
+    # threshold: правило срабатывает, когда позиционных аргументов больше значения.
+    # threshold: 3 => до 3 аргументов без имён можно, с 4-х обязательны имена.
+    # Примечание: detekt 1.23.x не поддерживает список исключаемых функций
+    # (arrayOf/listOf/println и т.п.) для NamedArguments — свойство ignoreMethods убрано.
+    threshold: 3
   NestedBlockDepth:
     active: true
     threshold: 4
@@ -345,7 +346,6 @@ performance:
     active: true
   SpreadOperator:
     active: true
-    excludedClasses: []
   UnnecessaryPartOfBinaryExpression:
     active: false
   UnnecessaryTemporaryInstantiation:
@@ -470,7 +470,7 @@ style:
     active: false
   ForbiddenComment:
     active: true
-    values:
+    comments:
       - reason: 'Avoid FIXME comments in production code.'
         value: 'FIXME:'
       - reason: 'Avoid STOPSHIP comments in production code.'
@@ -633,8 +633,6 @@ style:
     active: true
   UseSumOfInsteadOfFlatMapSize:
     active: false
-  UseToFindFirstOrFirstOrNull:
-    active: true
   WildcardImport:
     active: true
     excludeImports:

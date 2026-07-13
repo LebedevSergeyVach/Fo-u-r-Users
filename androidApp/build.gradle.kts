@@ -5,8 +5,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 
-    // Firebase
-    alias(libs.plugins.googleServices)
+    // Firebase — временно отключено: требует google-services.json из Firebase Console.
+    // Вернуть, когда файл будет добавлен в androidApp/.
+    // alias(libs.plugins.googleServices)
 
     // Code Quality
     alias(libs.plugins.ktlint)
@@ -36,12 +37,21 @@ dependencies {
 
 android {
     namespace = "space.users.four.serphantom"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "space.users.four.serphantom"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.android.targetSdk
+                .get()
+                .toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -68,6 +78,11 @@ ktlint {
     android.set(true)
     verbose.set(true)
     outputToConsole.set(true)
+    filter {
+        // Сгенерированный код (Compose Resources и т.п.) не проходит наши правила
+        // именования и пересоздаётся при сборке — исключаем его из проверки.
+        exclude { element -> element.file.path.contains("/build/generated/") }
+    }
 }
 
 detekt {

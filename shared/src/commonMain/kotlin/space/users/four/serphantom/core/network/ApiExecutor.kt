@@ -17,12 +17,18 @@ import kotlinx.coroutines.CancellationException
  * (см. [HttpClientFactory]) — иначе Ktor не бросает исключения на 4xx/5xx.
  */
 class ApiExecutor {
+
     /**
      * Безопасно выполняет [block] и оборачивает результат в [ExecutionResult].
      *
      * [CancellationException] пробрасывается наружу без перехвата — иначе отмена
      * корутины (например, при уходе с экрана) будет молча проглочена и превратится
      * в ложную ошибку.
+     *
+     * @param [block] Сетевой вызов API, возвращающий DTO напрямую.
+     * @return [ExecutionResult.Success] с результатом [block] либо
+     *   [ExecutionResult.Error] с описанием перехваченной ошибки.
+     * @throws CancellationException Пробрасывается наружу при отмене корутины.
      */
     suspend fun <T> execute(block: suspend () -> T): ExecutionResult<T> =
         try {

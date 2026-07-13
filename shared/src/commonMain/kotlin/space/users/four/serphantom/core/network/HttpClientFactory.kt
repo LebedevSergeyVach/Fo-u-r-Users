@@ -22,6 +22,16 @@ import kotlinx.serialization.json.Json
  * Клиент регистрируется как `single` в `NetworkModule`.
  */
 object HttpClientFactory {
+
+    /**
+     * Создаёт преднастроенный [HttpClient] с настройками проекта.
+     *
+     * Подключает согласование контента [ContentNegotiation] с [Json], таймауты
+     * [HttpTimeout], повтор запросов [HttpRequestRetry], логирование [Logging] и
+     * базовые параметры запроса ([NetworkConstants.BASE_URL], `Content-Type`).
+     *
+     * @return Готовый к использованию [HttpClient].
+     */
     fun create(): HttpClient =
         HttpClient {
             // Без этого флага Ktor не бросает ClientRequestException / ServerResponseException

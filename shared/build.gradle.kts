@@ -15,7 +15,7 @@ plugins {
 kotlin {
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "Shared"
@@ -24,19 +24,25 @@ kotlin {
     }
 
     androidLibrary {
-       namespace = "space.users.four.serphantom.shared"
-       compileSdk = libs.versions.android.compileSdk.get().toInt()
-       minSdk = libs.versions.android.minSdk.get().toInt()
+        namespace = "space.users.four.serphantom.shared"
+        compileSdk =
+            libs.versions.android.compileSdk
+                .get()
+                .toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
 
-       compilerOptions {
-           jvmTarget = JvmTarget.JVM_11
-       }
-       androidResources {
-           enable = true
-       }
-       withHostTest {
-           isIncludeAndroidResources = true
-       }
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+        androidResources {
+            enable = true
+        }
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
     }
 
     sourceSets {
@@ -46,6 +52,10 @@ kotlin {
 
             // Ktor (Android Engine)
             implementation(libs.ktor.client.okhttp)
+
+            // Firebase Android BOM — задаёт версии транзитивных com.google.firebase:*
+            // артефактов, которые GitLive Firebase SDK объявляет без версии.
+            implementation(project.dependencies.platform(libs.firebase.bom))
         }
         iosMain.dependencies {
             // Ktor (iOS Engine)
@@ -101,6 +111,11 @@ ktlint {
     android.set(true)
     verbose.set(true)
     outputToConsole.set(true)
+    filter {
+        // Сгенерированный код (Compose Resources и т.п.) не проходит наши правила
+        // именования и пересоздаётся при сборке — исключаем его из проверки.
+        exclude { element -> element.file.path.contains("/build/generated/") }
+    }
 }
 
 detekt {

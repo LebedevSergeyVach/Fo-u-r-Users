@@ -36,6 +36,9 @@ kotlinx-coroutines = "1.11.0"
 
 # Firebase (GitLive SDK)
 gitlive-firebase = "2.4.0"
+# Firebase Android BOM — поставляет версии транзитивных com.google.firebase:* артефактов,
+# которые GitLive SDK объявляет без версии.
+firebase-bom = "33.7.0"
 
 # Google Services
 google-services = "4.5.0"
@@ -93,6 +96,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # Firebase (GitLive SDK)
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "dev.gitlive:firebase-analytics", version.ref = "gitlive-firebase" }
 firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "gitlive-firebase" }
 

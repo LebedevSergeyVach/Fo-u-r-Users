@@ -4,11 +4,16 @@ package space.users.four.serphantom.core.network
  * Единый тип результата выполнения API-запроса.
  *
  * Возвращается из [ApiExecutor.execute] и прокидывается через Repository во ViewModel.
- * Заменяет привычный `try/catch` в бизнес-слоях: обработка ошибок сосредоточена
+ * Заменяет привычный `try`/`catch` в бизнес-слоях: обработка ошибок сосредоточена
  * в [ApiExecutor], а потребитель работает с исчерпывающим `when (result)`.
  */
 sealed interface ExecutionResult<out T> {
-    /** Успешный результат с полезной нагрузкой. */
+
+    /**
+     * Успешный результат с полезной нагрузкой.
+     *
+     * @param [data] Данные, полученные в результате запроса.
+     */
     data class Success<out T>(
         val data: T,
     ) : ExecutionResult<T>
@@ -16,9 +21,9 @@ sealed interface ExecutionResult<out T> {
     /**
      * Ошибка выполнения запроса.
      *
-     * @param code HTTP-код ответа (для сетевых ошибок и таймаутов — `null`).
-     * @param message Человеко-читаемое сообщение для UI/логов.
-     * @param throwable Оригинальное исключение для диагностики и логирования.
+     * @param [code] HTTP-код ответа; для сетевых ошибок и таймаутов — `null`.
+     * @param [message] Человеко-читаемое сообщение для UI и логов.
+     * @param [throwable] Оригинальное исключение для диагностики и логирования.
      */
     data class Error(
         val code: Int? = null,
@@ -27,24 +32,45 @@ sealed interface ExecutionResult<out T> {
     ) : ExecutionResult<Nothing>
 }
 
-/** `true`, если результат — [ExecutionResult.Success]. */
+/**
+ * Признак успешного результата.
+ *
+ * @return `true`, если результат — [ExecutionResult.Success].
+ */
 val ExecutionResult<*>.isSuccess: Boolean
     get() = this is ExecutionResult.Success
 
-/** `true`, если результат — [ExecutionResult.Error]. */
+/**
+ * Признак ошибки.
+ *
+ * @return `true`, если результат — [ExecutionResult.Error].
+ */
 val ExecutionResult<*>.isError: Boolean
     get() = this is ExecutionResult.Error
 
-/** Возвращает данные при успехе или `null` при ошибке. */
+/**
+ * Извлекает данные результата или `null`.
+ *
+ * @return Данные при успехе или `null` при ошибке.
+ */
 fun <T> ExecutionResult<T>.getOrNull(): T? = (this as? ExecutionResult.Success)?.data
 
-/** Возвращает данные при успехе или [default] при ошибке. */
+/**
+ * Извлекает данные результата или значение по умолчанию.
+ *
+ * @param [default] Значение, возвращаемое при ошибке.
+ * @return Данные при успехе или [default] при ошибке.
+ */
 fun <T> ExecutionResult<T>.getOrDefault(default: T): T = getOrNull() ?: default
 
 /**
  * Трансформирует данные [ExecutionResult.Success] через [transform],
- * сохраняя [ExecutionResult.Error] без изменений. Основной инструмент
- * маппинга DTO → Domain внутри Repository.
+ * сохраняя [ExecutionResult.Error] без изменений.
+ *
+ * Основной инструмент маппинга DTO → Domain внутри Repository.
+ *
+ * @param [transform] Функция преобразования данных при успехе.
+ * @return Новый [ExecutionResult] с преобразованными данными или исходная ошибка.
  */
 inline fun <T, R> ExecutionResult<T>.map(transform: (T) -> R): ExecutionResult<R> =
     when (this) {
@@ -52,13 +78,23 @@ inline fun <T, R> ExecutionResult<T>.map(transform: (T) -> R): ExecutionResult<R
         is ExecutionResult.Error -> this
     }
 
-/** Выполняет [action] при успехе; возвращает исходный результат для цепочек вызовов. */
+/**
+ * Выполняет [action] при успешном результате.
+ *
+ * @param [action] Действие над данными при успехе.
+ * @return Исходный результат — для построения цепочек вызовов.
+ */
 inline fun <T> ExecutionResult<T>.onSuccess(action: (T) -> Unit): ExecutionResult<T> {
     if (this is ExecutionResult.Success) action(data)
     return this
 }
 
-/** Выполняет [action] при ошибке; возвращает исходный результат для цепочек вызовов. */
+/**
+ * Выполняет [action] при ошибке.
+ *
+ * @param [action] Действие над [ExecutionResult.Error] при ошибке.
+ * @return Исходный результат — для построения цепочек вызовов.
+ */
 inline fun <T> ExecutionResult<T>.onError(action: (ExecutionResult.Error) -> Unit): ExecutionResult<T> {
     if (this is ExecutionResult.Error) action(this)
     return this
