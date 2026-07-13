@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -13,6 +15,19 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
 }
+
+// Единая версия приложения из каталога версий (gradle/libs.versions.toml).
+val appVersionName: String =
+    libs.versions.app.versionName
+        .get()
+
+// Метка времени сборки в формате yyyy-MM-dd_HH-mm-ss. Вычисляется на этапе
+// конфигурации — каждая новая сборка получает свежее значение (это намеренно
+// делает имя APK уникальным и отключает переиспользование configuration cache).
+val buildTimestamp: String =
+    LocalDateTime
+        .now()
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"))
 
 kotlin {
     compilerOptions {
@@ -52,8 +67,11 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode =
+            libs.versions.app.versionCode
+                .get()
+                .toInt()
+        versionName = appVersionName
     }
     packaging {
         resources {
@@ -61,13 +79,33 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            // Отдельный applicationId, чтобы debug и release ставились рядом.
+            applicationIdSuffix = ".debug"
+            isMinifyEnabled = false
+            isDebuggable = true
+        }
         getByName("release") {
             isMinifyEnabled = false
+            isDebuggable = false
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+// Имя выходного APK: FourUsers_<вид>_v<версия>_<дата>_<время>.apk
+// Например: FourUsers_release_v1.0_2026-07-13_14-30-05.apk
+androidComponents {
+    onVariants { variant ->
+        variant.outputs.forEach { output ->
+            val apkName = "FourUsers_${variant.name}_v${appVersionName}_$buildTimestamp.apk"
+            (output as? com.android.build.api.variant.impl.VariantOutputImpl)
+                ?.outputFileName
+                ?.set(apkName)
+        }
     }
 }
 
