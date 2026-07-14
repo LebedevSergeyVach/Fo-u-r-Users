@@ -5,6 +5,7 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.CancellationException
+import space.users.four.serphantom.core.result.ExecutionResult
 
 /**
  * Единственная точка обработки ошибок сетевых вызовов в приложении.

@@ -1,25 +1,25 @@
-package space.users.four.serphantom.core.network
+package space.users.four.serphantom.core.result
 
 /**
- * Единый тип результата выполнения API-запроса.
+ * Единый тип результата выполнения операции (сеть, БД, бизнес-логика).
  *
- * Возвращается из [ApiExecutor.execute] и прокидывается через Repository во ViewModel.
- * Заменяет привычный `try`/`catch` в бизнес-слоях: обработка ошибок сосредоточена
- * в [ApiExecutor], а потребитель работает с исчерпывающим `when (result)`.
+ * Нейтральный shared-kernel: не зависит от Ktor/Room и любого фреймворка, поэтому
+ * его безопасно возвращают контракты `domain` (Repository, UseCase). Обработка ошибок
+ * сосредоточена в `ApiExecutor`, а потребитель работает с исчерпывающим `when (result)`.
  */
 sealed interface ExecutionResult<out T> {
 
     /**
      * Успешный результат с полезной нагрузкой.
      *
-     * @param [data] Данные, полученные в результате запроса.
+     * @param [data] Данные, полученные в результате операции.
      */
     data class Success<out T>(
         val data: T,
     ) : ExecutionResult<T>
 
     /**
-     * Ошибка выполнения запроса.
+     * Ошибка выполнения операции.
      *
      * @param [code] HTTP-код ответа; для сетевых ошибок и таймаутов — `null`.
      * @param [message] Человеко-читаемое сообщение для UI и логов.
