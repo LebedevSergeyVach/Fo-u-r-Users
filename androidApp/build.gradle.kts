@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 
+    // Type-safe навигация: @Serializable-маршруты
+    alias(libs.plugins.kotlinSerialization)
+
     // Firebase — временно отключено: требует google-services.json из Firebase Console.
     // Вернуть, когда файл будет добавлен в androidApp/.
     // alias(libs.plugins.googleServices)
