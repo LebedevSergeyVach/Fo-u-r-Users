@@ -1,15 +1,14 @@
 package space.users.four.serphantom.core.di
 
 import org.koin.dsl.module
-import space.users.four.serphantom.data.repository.UserRepositoryImpl
-import space.users.four.serphantom.domain.repository.UserRepository
 
 /**
  * DI-модуль реализаций репозиториев.
  *
- * Репозитории регистрируются по интерфейсу из `domain`.
+ * Репозитории регистрируются по интерфейсу из `domain`:
+ * `single<UserRepository> { UserRepositoryImpl(userApi = get(), apiExecutor = get()) }`.
+ * Пока фич нет — модуль пуст.
  */
 val repositoryModule =
     module {
-        single<UserRepository> { UserRepositoryImpl(userApi = get(), apiExecutor = get()) }
     }

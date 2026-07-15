@@ -1,15 +1,13 @@
 package space.users.four.serphantom.core.di
 
 import org.koin.dsl.module
-import space.users.four.serphantom.domain.usecase.GetUsersUseCase
 
 /**
  * DI-модуль UseCase (интеракторов).
  *
  * UseCase регистрируются как `single` (синглтоны): могут кэшировать данные и хранить
- * общее состояние, переиспользуются несколькими ViewModel.
+ * общее состояние, переиспользуются несколькими ViewModel. Пока фич нет — модуль пуст.
  */
 val useCaseModule =
     module {
-        single { GetUsersUseCase(userRepository = get()) }
     }
