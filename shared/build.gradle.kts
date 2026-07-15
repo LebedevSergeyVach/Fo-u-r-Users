@@ -112,12 +112,19 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
 
+            // Логирование (мультиплатформенное)
+            implementation(libs.kermit)
+
             // Firebase (GitLive SDK)
             implementation(libs.firebase.analytics)
             implementation(libs.firebase.config)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+
+            // Тестирование корутин и Flow
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
         }
     }
 }

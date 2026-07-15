@@ -14,6 +14,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import co.touchlab.kermit.Logger as KermitLogger
 
 /**
  * Фабрика единственного [HttpClient] приложения.
@@ -64,11 +65,11 @@ object HttpClientFactory {
 
             install(Logging) {
                 // Logger.SIMPLE / Logger.DEFAULT доступны только в JVM-sourceSet,
-                // поэтому в commonMain используем мультиплатформенный логгер на println.
+                // поэтому в commonMain роутим логи Ktor в мультиплатформенный Kermit.
                 logger =
                     object : Logger {
                         override fun log(message: String) {
-                            println("[Ktor] $message")
+                            KermitLogger.i(tag = "Ktor") { message }
                         }
                     }
                 level = LogLevel.BODY

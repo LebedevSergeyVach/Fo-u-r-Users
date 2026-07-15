@@ -48,6 +48,18 @@ ksp = "2.3.10"
 kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.11.0"
 
+# Мультиплатформенные утилиты
+kermit = "2.1.0"                # логирование (общий слой)
+turbine = "1.2.1"               # тестирование Flow/StateFlow
+
+# Swift interop — мост общей ViewModel в SwiftUI.
+# ВНИМАНИЕ: SKIE 0.10.13 не поддерживает Kotlin 2.4.0 (как и KSP). Подключается
+# на этапе iOS, когда выйдет релиз под 2.4.x. Пока только объявлено.
+skie = "0.10.13"
+
+# Мультиплатформенный BuildConfig (debug-флаги, BASE_URL по окружениям).
+buildkonfig = "0.22.0"
+
 # Firebase (GitLive SDK)
 gitlive-firebase = "2.4.0"
 # Firebase Android BOM — поставляет версии транзитивных com.google.firebase:* артефактов,
@@ -117,6 +129,11 @@ sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sql
 # Kotlinx
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+
+# Мультиплатформенные утилиты
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 # Firebase (GitLive SDK)
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
@@ -146,6 +163,10 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 # Room + KSP
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
+
+# Swift interop / BuildConfig (проводка — позже, см. комментарии к версиям)
+skie = { id = "co.touchlab.skie", version.ref = "skie" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 
 # Compose
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
