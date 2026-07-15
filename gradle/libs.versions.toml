@@ -52,9 +52,8 @@ kotlinx-coroutines = "1.11.0"
 kermit = "2.1.0"                # логирование (общий слой)
 turbine = "1.2.1"               # тестирование Flow/StateFlow
 
-# Swift interop — мост общей ViewModel в SwiftUI.
-# ВНИМАНИЕ: SKIE 0.10.13 не поддерживает Kotlin 2.4.0 (как и KSP). Подключается
-# на этапе iOS, когда выйдет релиз под 2.4.x. Пока только объявлено.
+# Swift interop — мост общей ViewModel в SwiftUI (Flow/suspend → Swift).
+# SKIE 0.10.13 поддерживает Kotlin 2.4.0 (см. changelog 0.10.13). Плагин применён в shared.
 skie = "0.10.13"
 
 # Мультиплатформенный BuildConfig (debug-флаги, BASE_URL по окружениям).
@@ -99,6 +98,8 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+# Базовый (не Compose) ViewModel для commonMain — общая ViewModel, пригодная для SwiftUI.
+androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
@@ -164,7 +165,7 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 
-# Swift interop / BuildConfig (проводка — позже, см. комментарии к версиям)
+# Swift interop (SKIE применён в shared) / BuildConfig (BuildKonfig — позже)
 skie = { id = "co.touchlab.skie", version.ref = "skie" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 

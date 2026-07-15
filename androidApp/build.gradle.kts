@@ -36,15 +36,36 @@ kotlin {
 }
 
 dependencies {
-    // Shared Module
+    // Shared Module (общая логика, без UI)
     implementation(projects.shared)
 
     // AndroidX
     implementation(libs.androidx.activity.compose)
 
-    // Compose Tooling
+    // Compose (UI)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui)
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
+
+    // Navigation (Compose)
+    implementation(libs.navigation.compose)
+
+    // Lifecycle — Compose-обвязка (viewModel(), collectAsStateWithLifecycle)
+    implementation(libs.androidx.lifecycle.viewmodelCompose)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+
+    // Koin — DI + Compose-интеграция
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.viewmodel.navigation)
+
+    // KtorScope — Compose-экран инспектора сети
+    implementation(libs.ktorscope.compose)
 
     // Code Quality — custom detekt rules
     detektPlugins(projects.detektCustomRules)

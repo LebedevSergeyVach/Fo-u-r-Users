@@ -3,13 +3,14 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
 
     // Room (локальная БД, KMP)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+
+    // Swift interop — мост общей ViewModel → SwiftUI (Flow/suspend → Swift)
+    alias(libs.plugins.skie)
 
     // Code Quality
     alias(libs.plugins.ktlint)
@@ -57,9 +58,6 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            // Compose
-            implementation(libs.compose.uiToolingPreview)
-
             // Ktor (Android Engine)
             implementation(libs.ktor.client.okhttp)
 
@@ -72,27 +70,12 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
-            // Compose
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(libs.compose.ui)
-            implementation(libs.compose.components.resources)
-            implementation(libs.compose.uiToolingPreview)
-
-            // Navigation
-            implementation(libs.navigation.compose)
-
-            // Lifecycle
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-
-            // Koin (DI)
+            // Koin (DI) — ядро без Compose
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.koin.compose.viewmodel.navigation)
+
+            // Общая ViewModel — базовый lifecycle-viewmodel (без Compose), пригодна для SwiftUI
+            implementation(libs.androidx.lifecycle.viewmodel)
 
             // Ktor (Networking)
             implementation(libs.ktor.client.core)
@@ -100,9 +83,8 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
 
-            // KtorScope — просмотр сетевых запросов на устройстве (Ktor-плагин + Compose UI)
+            // KtorScope — Ktor-плагин захвата запросов (UI-экран инспектора — в androidMain)
             implementation(libs.ktorscope.ktor)
-            implementation(libs.ktorscope.compose)
 
             // Room (локальная БД, KMP) + bundled SQLite driver
             implementation(libs.room.runtime)
@@ -134,6 +116,13 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
+// SKIE: отключаем отправку анонимной аналитики в Touchlab (приватность сборки).
+skie {
+    analytics {
+        enabled.set(false)
+    }
+}
+
 // region Code Quality
 
 ktlint {
@@ -157,8 +146,6 @@ detekt {
 // endregion
 
 dependencies {
-    androidRuntimeClasspath(libs.compose.uiTooling)
-
     // Room compiler (KSP) — по одному на каждый таргет KMP.
     add("kspAndroid", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)

@@ -14,6 +14,9 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.room) apply false
 
+    // Swift interop (мост общей ViewModel → SwiftUI)
+    alias(libs.plugins.skie) apply false
+
     // Compose
     alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.composeCompiler) apply false
