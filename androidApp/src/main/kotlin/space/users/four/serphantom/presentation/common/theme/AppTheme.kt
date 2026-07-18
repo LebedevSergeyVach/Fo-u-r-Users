@@ -11,12 +11,16 @@ import space.users.four.serphantom.presentation.common.theme.color.LocalColorSys
 import space.users.four.serphantom.presentation.common.theme.color.createDarkColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.createLightColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.toMaterialColorScheme
+import space.users.four.serphantom.presentation.common.theme.typography.AppTypography
+import space.users.four.serphantom.presentation.common.theme.typography.LocalTypography
+import space.users.four.serphantom.presentation.common.theme.typography.createAppTypography
+import space.users.four.serphantom.presentation.common.theme.typography.toMaterialTypography
 
 /**
  * Корневая тема приложения.
  *
  * Собирает токены, раздаёт их через [CompositionLocalProvider] и оборачивает [content]
- * в [MaterialTheme] — чтобы встроенные M3-компоненты наследовали цвета приложения.
+ * в [MaterialTheme] — чтобы встроенные M3-компоненты наследовали стили приложения.
  *
  * Светлая/тёмная схема выбирается по [isSystemInDarkTheme]. Принимает **только**
  * [content]: выбор схемы — внутренняя ответственность темы.
@@ -31,10 +35,15 @@ fun AppTheme(content: @Composable () -> Unit) {
         remember(darkTheme) {
             if (darkTheme) createDarkColorSystem() else createLightColorSystem()
         }
+    val typography = remember { createAppTypography() }
 
-    CompositionLocalProvider(LocalColorSystem provides colorSystem) {
+    CompositionLocalProvider(
+        LocalColorSystem provides colorSystem,
+        LocalTypography provides typography,
+    ) {
         MaterialTheme(
             colorScheme = colorSystem.toMaterialColorScheme(darkTheme),
+            typography = typography.toMaterialTypography(),
             content = content,
         )
     }
@@ -43,8 +52,9 @@ fun AppTheme(content: @Composable () -> Unit) {
 /**
  * Единая точка доступа к стилям приложения из Composable-функций.
  *
- * Пример: `AppTheme.colorSystem.primary`. Читать `LocalColorSystem.current` в UI
- * напрямую запрещено — только через этот аксессор.
+ * Пример: `AppTheme.colorSystem.primary`, `AppTheme.typography.titleLarge`. Читать
+ * `LocalColorSystem.current` / `LocalTypography.current` в UI напрямую запрещено —
+ * только через этот аксессор.
  */
 object AppTheme {
 
@@ -53,4 +63,10 @@ object AppTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalColorSystem.current
+
+    /** Текущая типографическая шкала. */
+    val typography: AppTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalTypography.current
 }

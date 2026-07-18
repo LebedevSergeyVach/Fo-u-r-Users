@@ -12,9 +12,10 @@ import space.users.four.serphantom.presentation.common.theme.AppTheme
 /**
  * Заглушка стартового экрана.
  *
- * Базовый каркас: подтверждает, что тема и навигация подключены. Цвета берутся из
- * семантических ролей [AppTheme.colorSystem], а не из сырых значений. Наполняется
- * реальным UI и подключается к ViewModel через `koinViewModel()` по мере появления фич.
+ * Базовый каркас: подтверждает, что тема и навигация подключены. Цвета и текстовые
+ * стили берутся из токенов темы ([AppTheme.colorSystem], [AppTheme.typography]), а не
+ * задаются вручную. Наполняется реальным UI и подключается к ViewModel через
+ * `koinViewModel()` по мере появления фич.
  */
 @Composable
 fun HomeScreen() {
@@ -29,6 +30,7 @@ fun HomeScreen() {
             Text(
                 text = "FourUsers",
                 color = AppTheme.colorSystem.onBackground,
+                style = AppTheme.typography.titleLarge,
             )
         }
     }
