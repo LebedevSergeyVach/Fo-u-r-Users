@@ -107,6 +107,9 @@ complexity:
     ignoreDefaultParameters: false
     ignoreDataClasses: true
     ignoreAnnotatedParameter: []
+    # Compose-компоненты по гайдлайнам API принимают много опциональных параметров
+    # (text, onClick, modifier, style, enabled, ...) — это идиома, а не code smell.
+    ignoreAnnotated: ['Composable']
   MethodOverloading:
     active: false
   NamedArguments:

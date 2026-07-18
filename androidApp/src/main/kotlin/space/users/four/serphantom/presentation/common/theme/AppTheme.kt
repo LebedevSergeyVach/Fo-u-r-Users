@@ -6,6 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
+import space.users.four.serphantom.presentation.common.theme.button.AppButtons
+import space.users.four.serphantom.presentation.common.theme.button.LocalButtons
+import space.users.four.serphantom.presentation.common.theme.button.createAppButtons
 import space.users.four.serphantom.presentation.common.theme.color.ColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.LocalColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.createDarkColorSystem
@@ -41,11 +44,16 @@ fun AppTheme(content: @Composable () -> Unit) {
         }
     val typography = remember { createAppTypography() }
     val shapes = remember { createAppShapes() }
+    val buttons =
+        remember(colorSystem, typography, shapes) {
+            createAppButtons(colorSystem = colorSystem, typography = typography, shapes = shapes)
+        }
 
     CompositionLocalProvider(
         LocalColorSystem provides colorSystem,
         LocalTypography provides typography,
         LocalShapes provides shapes,
+        LocalButtons provides buttons,
     ) {
         MaterialTheme(
             colorScheme = colorSystem.toMaterialColorScheme(darkTheme),
@@ -82,4 +90,10 @@ object AppTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalShapes.current
+
+    /** Текущие стили кнопок. */
+    val buttons: AppButtons
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalButtons.current
 }
