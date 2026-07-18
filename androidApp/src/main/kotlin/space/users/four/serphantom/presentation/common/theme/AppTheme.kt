@@ -13,6 +13,7 @@ import space.users.four.serphantom.presentation.common.theme.color.ColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.LocalColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.createDarkColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.createLightColorSystem
+import space.users.four.serphantom.presentation.common.theme.color.dynamicColorSystemOrNull
 import space.users.four.serphantom.presentation.common.theme.color.toMaterialColorScheme
 import space.users.four.serphantom.presentation.common.theme.shape.AppShapes
 import space.users.four.serphantom.presentation.common.theme.shape.LocalShapes
@@ -29,8 +30,10 @@ import space.users.four.serphantom.presentation.common.theme.typography.toMateri
  * Собирает токены, раздаёт их через [CompositionLocalProvider] и оборачивает [content]
  * в [MaterialTheme] — чтобы встроенные M3-компоненты наследовали стили приложения.
  *
- * Светлая/тёмная схема выбирается по [isSystemInDarkTheme]. Принимает **только**
- * [content]: выбор схемы — внутренняя ответственность темы.
+ * Светлая/тёмная схема выбирается по [isSystemInDarkTheme]. Источник цвета —
+ * системный акцент [dynamicColorSystemOrNull] (Material You), при его отключении —
+ * фирменная палитра. Принимает **только** [content]: выбор схемы — внутренняя
+ * ответственность темы.
  *
  * @param [content] Контент, который получит доступ к теме.
  */
@@ -38,10 +41,15 @@ import space.users.four.serphantom.presentation.common.theme.typography.toMateri
 fun AppTheme(content: @Composable () -> Unit) {
     val darkTheme = isSystemInDarkTheme()
 
-    val colorSystem =
+    // Обе схемы вычисляются безусловно: `remember` внутри ветки условия нарушил бы
+    // позиционную мемоизацию Compose при смене источника цвета.
+    val dynamicColorSystem = dynamicColorSystemOrNull(darkTheme)
+    val brandColorSystem =
         remember(darkTheme) {
             if (darkTheme) createDarkColorSystem() else createLightColorSystem()
         }
+    val colorSystem = dynamicColorSystem ?: brandColorSystem
+
     val typography = remember { createAppTypography() }
     val shapes = remember { createAppShapes() }
     val buttons =
