@@ -11,6 +11,10 @@ import space.users.four.serphantom.presentation.common.theme.color.LocalColorSys
 import space.users.four.serphantom.presentation.common.theme.color.createDarkColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.createLightColorSystem
 import space.users.four.serphantom.presentation.common.theme.color.toMaterialColorScheme
+import space.users.four.serphantom.presentation.common.theme.shape.AppShapes
+import space.users.four.serphantom.presentation.common.theme.shape.LocalShapes
+import space.users.four.serphantom.presentation.common.theme.shape.createAppShapes
+import space.users.four.serphantom.presentation.common.theme.shape.toMaterialShapes
 import space.users.four.serphantom.presentation.common.theme.typography.AppTypography
 import space.users.four.serphantom.presentation.common.theme.typography.LocalTypography
 import space.users.four.serphantom.presentation.common.theme.typography.createAppTypography
@@ -36,14 +40,17 @@ fun AppTheme(content: @Composable () -> Unit) {
             if (darkTheme) createDarkColorSystem() else createLightColorSystem()
         }
     val typography = remember { createAppTypography() }
+    val shapes = remember { createAppShapes() }
 
     CompositionLocalProvider(
         LocalColorSystem provides colorSystem,
         LocalTypography provides typography,
+        LocalShapes provides shapes,
     ) {
         MaterialTheme(
             colorScheme = colorSystem.toMaterialColorScheme(darkTheme),
             typography = typography.toMaterialTypography(),
+            shapes = shapes.toMaterialShapes(),
             content = content,
         )
     }
@@ -69,4 +76,10 @@ object AppTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalTypography.current
+
+    /** Текущий набор форм (скруглений). */
+    val shapes: AppShapes
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalShapes.current
 }
