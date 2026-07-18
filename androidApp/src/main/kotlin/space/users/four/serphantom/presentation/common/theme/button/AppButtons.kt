@@ -6,19 +6,11 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import space.users.four.serphantom.core.designsystem.AppAlphaTokens
 import space.users.four.serphantom.core.designsystem.AppSizeTokens
 import space.users.four.serphantom.presentation.common.theme.color.ColorSystem
 import space.users.four.serphantom.presentation.common.theme.shape.AppShapes
 import space.users.four.serphantom.presentation.common.theme.typography.AppTypography
-
-/** Прозрачность контейнера отключённой кнопки (MD3). */
-private const val DISABLED_CONTAINER_ALPHA = 0.12f
-
-/** Прозрачность содержимого отключённой кнопки (MD3). */
-private const val DISABLED_CONTENT_ALPHA = 0.38f
-
-/** Прозрачность контейнера «тональной» (вторичной) кнопки. */
-private const val TONAL_CONTAINER_ALPHA = 0.12f
 
 /**
  * Набор стилей кнопок приложения.
@@ -64,8 +56,8 @@ fun createAppButtons(
     typography: AppTypography,
     shapes: AppShapes,
 ): AppButtons {
-    val disabledContainer = colorSystem.onSurface.copy(alpha = DISABLED_CONTAINER_ALPHA)
-    val disabledContent = colorSystem.onSurface.copy(alpha = DISABLED_CONTENT_ALPHA)
+    val disabledContainer = colorSystem.onSurface.copy(alpha = AppAlphaTokens.DISABLED_CONTAINER)
+    val disabledContent = colorSystem.onSurface.copy(alpha = AppAlphaTokens.DISABLED_CONTENT)
     val baseStyle = createBaseButtonStyle(typography = typography, shapes = shapes)
 
     return AppButtons(
@@ -84,7 +76,7 @@ fun createAppButtons(
             baseStyle.copy(
                 colors =
                     ButtonColors(
-                        containerColor = colorSystem.primary.copy(alpha = TONAL_CONTAINER_ALPHA),
+                        containerColor = colorSystem.primary.copy(alpha = AppAlphaTokens.TONAL_CONTAINER),
                         contentColor = colorSystem.primary,
                         disabledContainerColor = disabledContainer,
                         disabledContentColor = disabledContent,
